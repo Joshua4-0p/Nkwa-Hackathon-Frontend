@@ -8,7 +8,7 @@ import Link from "next/link"
 import { useState, useEffect } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { useSearchParams } from "next/navigation";
+// import { useSearchParams } from "next/navigation";
 
 export default function DashboardPage() {
   const [balance] = useState("1,250.00");
@@ -34,7 +34,7 @@ export default function DashboardPage() {
   ];
 
   // Add this to your dashboard page
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
   const [transactions, setTransactions] = useState<TransactionItemProps[]>(initialTransactions);
 
   useEffect(() => {
