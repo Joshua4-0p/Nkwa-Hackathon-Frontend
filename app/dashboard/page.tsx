@@ -22,10 +22,10 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { useSearchParams } from "next/navigation";
+// import { useSearchParams } from "next/navigation";
 import { TransactionItem } from "@/components/transaction-item";
 
-export const dynamic = "force-dynamic";
+
 
 type TransactionType = "sent" | "received" | "topup" | "withdraw";
 type TransactionStatus = "completed" | "pending" | "failed";
@@ -88,39 +88,39 @@ export default function DashboardPage() {
     },
   ];
 
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
   const [transactions, setTransactions] =
     useState<TransactionItemProps[]>(initialTransactions);
 
-  useEffect(() => {
-    if (searchParams.get("topup") === "success") {
-      const amount = searchParams.get("amount") || "0.00";
+  // useEffect(() => {
+  //   if (searchParams.get("topup") === "success") {
+  //     const amount = searchParams.get("amount") || "0.00";
 
-      setTransactions((prev) => [
-        {
-          type: "topup",
-          name: "Mobile Money Top-Up",
-          amount,
-          currency: "XAF",
-          date: new Date().toLocaleDateString("en-US", {
-            weekday: "short",
-            month: "short",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          status: "completed",
-        },
-        ...prev,
-      ]);
+  //     setTransactions((prev) => [
+  //       {
+  //         type: "topup",
+  //         name: "Mobile Money Top-Up",
+  //         amount,
+  //         currency: "XAF",
+  //         date: new Date().toLocaleDateString("en-US", {
+  //           weekday: "short",
+  //           month: "short",
+  //           day: "numeric",
+  //           hour: "2-digit",
+  //           minute: "2-digit",
+  //         }),
+  //         status: "completed",
+  //       },
+  //       ...prev,
+  //     ]);
 
-      // Clear the search params after processing
-      const url = new URL(window.location.href);
-      url.searchParams.delete("topup");
-      url.searchParams.delete("amount");
-      window.history.replaceState({}, document.title, url.toString());
-    }
-  }, [searchParams]);
+  //     // Clear the search params after processing
+  //     const url = new URL(window.location.href);
+  //     url.searchParams.delete("topup");
+  //     url.searchParams.delete("amount");
+  //     window.history.replaceState({}, document.title, url.toString());
+  //   }
+  // }, [searchParams]);
 
   return (
     <DashboardShell>

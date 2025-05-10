@@ -24,8 +24,8 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+// import { useSearchParams } from "next/navigation";
+// import { Suspense } from "react";
 
 export const dynamic = "force-dynamic";
 
@@ -75,14 +75,14 @@ const notifications = [
 export default function NotificationsPage() {
   const [filter, setFilter] = useState("all");
   const [unreadOnly, setUnreadOnly] = useState(false);
-  const searchParams = useSearchParams();
-  const amount = searchParams.get("amount") || "0.00";
+  // const searchParams = useSearchParams();
+  // const amount = searchParams.get("amount") || "0.00";
 
   const notifications = [
     {
       type: "topup",
       title: "Top-Up Successful",
-      description: `Your wallet has been credited with XAF ${amount}`,
+      description: `Your wallet has been credited with 1000XAF`,
       date: "Just now",
       read: false,
       icon: <Wallet className="h-5 w-5 text-success" />,
