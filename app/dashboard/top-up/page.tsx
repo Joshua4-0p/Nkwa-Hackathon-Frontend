@@ -1,150 +1,233 @@
-// app/dashboard/top-up/page.tsx
-
 "use client";
-import { motion } from "framer-motion";
+
+import { useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { DashboardShell } from "@/components/dashboard-shell";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Link from "next/link";
-import { useState } from "react";
-import { ArrowLeft, CheckCircle, Loader2, Phone, Wallet } from "lucide-react";
-import { DashboardShell } from "@/components/dashboard-shell";
-import { useRouter } from "next/navigation";
-import { Card, CardContent } from "@/components/ui/card"
+import { Loader2, Plus } from "lucide-react";
 
 export default function TopUpPage() {
-  const router = useRouter();
-  const [phone, setPhone] = useState("+237");
+  const { toast } = useToast();
   const [amount, setAmount] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({
-    phone: "",
-    amount: "",
-  });
+  const [phoneNumber, setPhoneNumber] = useState("237");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const validatePhone = (phone: string) => {
-    const cameroonRegex = /^\+237[6-8]\d{7,8}$/;
-    return cameroonRegex.test(phone);
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/[^0-9.]/g, "");
+    setAmount(value);
   };
 
-  const validateAmount = (amount: string) => {
-    const value = Number(amount);
-    return !isNaN(value) && value >= 100 && value <= 1000000;
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (/^237\d*$/.test(value)) {
+      setPhoneNumber(value);
+    } else if (value === "") {
+      setPhoneNumber("237");
+    }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleTopUp = async () => {
+    if (!phoneNumber || !amount) {
+      toast({
+        title: "Missing Information",
+        description: "Please enter both phone number and amount",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    const newErrors = {
-      phone: validatePhone(phone) ? "" : "Invalid Cameroon phone number",
-      amount: validateAmount(amount) ? "" : "Amount must be at least XAF 100",
-    };
+    // Validate phone number format
+    if (!/^237\d{9}$/.test(phoneNumber)) {
+      toast({
+        title: "Invalid Phone Number",
+        description: "Must be 237 followed by 9 digits (12 total)",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    setErrors(newErrors);
+    // Validate amount
+    const amountValue = parseFloat(amount);
+    if (isNaN(amountValue)) {
+      toast({
+        title: "Invalid Amount",
+        description: "Please enter a valid number",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    if (Object.values(newErrors).some((error) => error)) return;
+    if (amountValue <= 0) {
+      toast({
+        title: "Invalid Amount",
+        description: "Amount must be greater than 0",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    setLoading(true);
+    if (amountValue < 100) {
+      toast({
+        title: "Minimum Amount",
+        description: "Minimum purchase is XAF 100 (100 AFC)",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    // Simulate API call and payment processing
-    setTimeout(() => {
-      setLoading(false);
-      router.push("/dashboard?topup=success&amount=" + amount);
-    }, 2000);
+    setIsLoading(true);
+
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      const formattedAmount = amountValue.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+
+      toast({
+        title: "Purchase Successful!",
+        description: (
+          <div className="flex flex-col gap-1">
+            <p>
+              You've purchased{" "}
+              <span className="font-bold">{formattedAmount} AFC</span>
+            </p>
+            <p>
+              Paid: <span className="font-bold">{formattedAmount} XAF</span>
+            </p>
+          </div>
+        ),
+      });
+
+      // Reset form
+      setAmount("");
+      setPhoneNumber("237");
+
+      // Redirect with success state
+      window.location.href = `/dashboard?topup=success&amount=${formattedAmount}`;
+    } catch (error) {
+      toast({
+        title: "Purchase Failed",
+        description:
+          error instanceof Error ? error.message : "Transaction failed",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <DashboardShell>
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="max-w-md mx-auto py-8"
-      >
-        <div className="flex items-center gap-2 mb-8">
-          <Button variant="ghost" size="icon" onClick={() => router.back()}>
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <h1 className="text-2xl font-bold">Top Up Wallet</h1>
-        </div>
-
-        <Card className="bg-gradient-to-br from-primary to-primary/10">
-          <CardContent className="p-6">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="phone" className="text-primary-foreground">
-                  Phone Number
-                </Label>
-                <div className="relative">
-                  <Input
-                    id="phone"
-                    type="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="bg-background"
-                  />
-                  <Phone className="absolute right-3 top-3 h-5 w-5 text-muted-foreground" />
+      <div className="max-w-md mx-auto">
+        <Card>
+          <CardHeader>
+            <CardTitle>Buy AFC Cryptocurrency</CardTitle>
+            <CardDescription>
+              Convert XAF to AFC at 1:1 rate via Mobile Money
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="phone">Mobile Money Number</Label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <span className="text-muted-foreground">+</span>
                 </div>
-                {errors.phone && (
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="text-sm text-red-500"
-                  >
-                    {errors.phone}
-                  </motion.p>
-                )}
+                <Input
+                  id="phone"
+                  type="tel"
+                  placeholder="237XXXXXXXXX"
+                  className="pl-8"
+                  value={phoneNumber}
+                  onChange={handlePhoneChange}
+                  maxLength={12}
+                />
               </div>
+              <p className="text-xs text-muted-foreground">
+                Cameroon number format: 237 followed by 9 digits
+              </p>
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="amount" className="text-primary-foreground">
-                  Amount (XAF)
-                </Label>
-                <div className="relative">
-                  <Input
-                    id="amount"
-                    type="number"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    min="100"
-                    className="bg-background"
-                  />
-                  <Wallet className="absolute right-3 top-3 h-5 w-5 text-muted-foreground" />
+            <div className="space-y-2">
+              <Label htmlFor="amount">Amount to Spend (XAF)</Label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <span className="text-muted-foreground">XAF</span>
                 </div>
-                {errors.amount && (
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="text-sm text-red-500"
-                  >
-                    {errors.amount}
-                  </motion.p>
-                )}
+                <Input
+                  id="amount"
+                  type="text"
+                  inputMode="decimal"
+                  placeholder="0.00"
+                  className="pl-12"
+                  value={amount}
+                  onChange={handleAmountChange}
+                />
               </div>
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>You'll receive: {amount || "0"} AFC</span>
+                <span>Minimum: 100 XAF</span>
+              </div>
+            </div>
 
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? (
-                  <Loader2 className="h-5 w-5 animate-spin mx-auto" />
+            <div className="pt-2">
+              <Button
+                className="w-full"
+                onClick={handleTopUp}
+                disabled={
+                  isLoading ||
+                  !phoneNumber ||
+                  !amount ||
+                  phoneNumber.length !== 12 ||
+                  parseFloat(amount) < 100
+                }
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Processing...
+                  </>
                 ) : (
                   <>
-                    Confirm Top-Up
-                    <CheckCircle className="ml-2 h-5 w-5" />
+                    <Plus className="mr-2 h-4 w-4" />
+                    Buy AFC
                   </>
                 )}
               </Button>
-            </form>
+            </div>
           </CardContent>
         </Card>
 
-        <div className="mt-4 text-sm text-muted-foreground">
-          <p>Supported mobile money providers:</p>
-          <div className="flex gap-2 mt-2">
-            <span className="px-2 py-1 bg-muted rounded-md">
-              MTN Mobile Money
-            </span>
-            <span className="px-2 py-1 bg-muted rounded-md">Orange Money</span>
-          </div>
+        <div className="mt-6 p-4 bg-muted/50 rounded-lg">
+          <h3 className="font-medium mb-2">How it works:</h3>
+          <ul className="space-y-2 text-sm text-muted-foreground">
+            <li className="flex items-start gap-2">
+              <span>1.</span>
+              <span>Enter your mobile money number and amount in XAF</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span>2.</span>
+              <span>Confirm the Mobile Money payment request</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span>3.</span>
+              <span>Receive equal amount in AFC instantly</span>
+            </li>
+          </ul>
         </div>
-      </motion.div>
+      </div>
     </DashboardShell>
   );
 }
