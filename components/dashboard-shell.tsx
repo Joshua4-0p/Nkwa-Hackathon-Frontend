@@ -18,7 +18,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useSearchParams, useRouter } from "next/navigation";
+// import { useSearchParams, useRouter } from "next/navigation";
 
 interface DashboardShellProps {
   children: React.ReactNode
@@ -27,19 +27,19 @@ interface DashboardShellProps {
 export function DashboardShell({ children }: DashboardShellProps) {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
-  const router = useRouter();
+  // const router = useRouter();
 
   // Add inside DashboardShell component
-  const searchParams = useSearchParams();
-  const [balance, setBalance] = useState(1250);
+  // const searchParams = useSearchParams();
+  // const [balance, setBalance] = useState(1250);
 
-  useEffect(() => {
-    if (searchParams.get("topup") === "success") {
-      const amount = Number(searchParams.get("amount"));
-      setBalance((prev) => prev + (amount || 0));
-      router.replace("/dashboard");
-    }
-  }, [searchParams, router]);
+  // useEffect(() => {
+  //   if (searchParams.get("topup") === "success") {
+  //     const amount = Number(searchParams.get("amount"));
+  //     setBalance((prev) => prev + (amount || 0));
+  //     router.replace("/dashboard");
+  //   }
+  // }, [searchParams, router]);
 
   const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: Home },
