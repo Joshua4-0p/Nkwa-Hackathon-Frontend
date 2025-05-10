@@ -22,7 +22,22 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-// import { useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { TransactionItem } from "@/components/transaction-item";
+
+export const dynamic = "force-dynamic";
+
+type TransactionType = "sent" | "received" | "topup" | "withdraw";
+type TransactionStatus = "completed" | "pending" | "failed";
+
+interface TransactionItemProps {
+  type: TransactionType;
+  name: string;
+  amount: string;
+  currency: string;
+  date: string;
+  status: TransactionStatus;
+}
 
 export default function DashboardPage() {
   const [balance] = useState("1,250.00");
@@ -48,14 +63,32 @@ export default function DashboardPage() {
       name: "Angelo",
       amount: "500.00",
       currency: "XAF",
-      date: "Yesterday, 3:45 PM",
-      status: "completed" as const,
+      date: new Date(Date.now() - 86400000).toLocaleDateString("en-US", {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      status: "completed",
     },
-    // Add other initial transactions here...
+    {
+      type: "sent",
+      name: "Joshua",
+      amount: "500.00",
+      currency: "XAF",
+      date: new Date(Date.now() - 86400000).toLocaleDateString("en-US", {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      status: "completed",
+    },
   ];
 
-  // Add this to your dashboard page
-  // const searchParams = useSearchParams();
+  const searchParams = useSearchParams();
   const [transactions, setTransactions] =
     useState<TransactionItemProps[]>(initialTransactions);
 
