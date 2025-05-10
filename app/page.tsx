@@ -26,9 +26,9 @@ const footerVariants = {
     opacity: 1,
     transition: {
       staggerChildren: 0.1,
-      delayChildren: 0.3
-    }
-  }
+      delayChildren: 0.3,
+    },
+  },
 };
 
 const columnVariants = {
@@ -36,13 +36,13 @@ const columnVariants = {
   visible: {
     y: 0,
     opacity: 1,
-    transition: { type: "spring", stiffness: 120 }
-  }
+    transition: { type: "spring", stiffness: 120 },
+  },
 };
 
 const logoVariants = {
   hover: { rotate: [0, -15, 15, 0], transition: { duration: 0.8 } },
-  tap: { scale: 0.95 }
+  tap: { scale: 0.95 },
 };
 
 const containerVariants = {
@@ -61,13 +61,13 @@ const cardVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { type: "spring", stiffness: 120 }
-  }
+    transition: { type: "spring", stiffness: 120 },
+  },
 };
 
 const iconVariants = {
   hover: { rotate: 15, scale: 1.1 },
-  tap: { scale: 0.95 }
+  tap: { scale: 0.95 },
 };
 
 const itemVariants = {

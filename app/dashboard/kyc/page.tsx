@@ -1,17 +1,34 @@
-"use client"
+"use client";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { DashboardShell } from "@/components/dashboard-shell";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  AlertCircle,
+  Check,
+  ChevronRight,
+  FileText,
+  Upload,
+  User,
+} from "lucide-react";
+import { useState } from "react";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { DashboardShell } from "@/components/dashboard-shell"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { AlertCircle, Check, ChevronRight, FileText, Upload, User } from "lucide-react"
-import { useState } from "react"
+export const dynamic = "force-dynamic";
 
 export default function KYCPage() {
-  const [step, setStep] = useState(1)
-  const [verificationStatus, setVerificationStatus] = useState<"unverified" | "pending" | "verified">("unverified")
+  const [step, setStep] = useState(1);
+  const [verificationStatus, setVerificationStatus] = useState<
+    "unverified" | "pending" | "verified"
+  >("unverified");
 
   return (
     <DashboardShell>
@@ -19,7 +36,9 @@ export default function KYCPage() {
         <Card>
           <CardHeader>
             <CardTitle>Identity Verification (KYC)</CardTitle>
-            <CardDescription>Complete your identity verification to unlock all features</CardDescription>
+            <CardDescription>
+              Complete your identity verification to unlock all features
+            </CardDescription>
           </CardHeader>
           <CardContent>
             {verificationStatus === "unverified" && (
@@ -40,7 +59,10 @@ export default function KYCPage() {
                   <div className="space-y-6">
                     <div className="space-y-2">
                       <Label htmlFor="full-name">Full Legal Name</Label>
-                      <Input id="full-name" placeholder="Enter your full name as it appears on your ID" />
+                      <Input
+                        id="full-name"
+                        placeholder="Enter your full name as it appears on your ID"
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="dob">Date of Birth</Label>
@@ -62,7 +84,10 @@ export default function KYCPage() {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="address">Residential Address</Label>
-                      <Input id="address" placeholder="Enter your full address" />
+                      <Input
+                        id="address"
+                        placeholder="Enter your full address"
+                      />
                     </div>
                   </div>
                 )}
@@ -71,65 +96,108 @@ export default function KYCPage() {
                   <div className="space-y-6">
                     <Tabs defaultValue="national-id">
                       <TabsList className="grid w-full grid-cols-3">
-                        <TabsTrigger value="national-id">National ID</TabsTrigger>
+                        <TabsTrigger value="national-id">
+                          National ID
+                        </TabsTrigger>
                         <TabsTrigger value="passport">Passport</TabsTrigger>
-                        <TabsTrigger value="drivers-license">Driver's License</TabsTrigger>
+                        <TabsTrigger value="drivers-license">
+                          Driver's License
+                        </TabsTrigger>
                       </TabsList>
-                      <TabsContent value="national-id" className="space-y-4 pt-4">
+                      <TabsContent
+                        value="national-id"
+                        className="space-y-4 pt-4"
+                      >
                         <div className="space-y-2">
                           <Label htmlFor="id-number">National ID Number</Label>
-                          <Input id="id-number" placeholder="Enter your ID number" />
+                          <Input
+                            id="id-number"
+                            placeholder="Enter your ID number"
+                          />
                         </div>
                         <div className="space-y-2">
                           <Label>ID Front Side</Label>
                           <div className="border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-muted/50">
                             <Upload className="h-8 w-8 text-muted-foreground" />
-                            <p className="text-sm font-medium">Upload Front Side</p>
-                            <p className="text-xs text-muted-foreground">JPG, PNG or PDF, max 5MB</p>
+                            <p className="text-sm font-medium">
+                              Upload Front Side
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              JPG, PNG or PDF, max 5MB
+                            </p>
                           </div>
                         </div>
                         <div className="space-y-2">
                           <Label>ID Back Side</Label>
                           <div className="border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-muted/50">
                             <Upload className="h-8 w-8 text-muted-foreground" />
-                            <p className="text-sm font-medium">Upload Back Side</p>
-                            <p className="text-xs text-muted-foreground">JPG, PNG or PDF, max 5MB</p>
+                            <p className="text-sm font-medium">
+                              Upload Back Side
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              JPG, PNG or PDF, max 5MB
+                            </p>
                           </div>
                         </div>
                       </TabsContent>
                       <TabsContent value="passport" className="space-y-4 pt-4">
                         <div className="space-y-2">
-                          <Label htmlFor="passport-number">Passport Number</Label>
-                          <Input id="passport-number" placeholder="Enter your passport number" />
+                          <Label htmlFor="passport-number">
+                            Passport Number
+                          </Label>
+                          <Input
+                            id="passport-number"
+                            placeholder="Enter your passport number"
+                          />
                         </div>
                         <div className="space-y-2">
                           <Label>Passport Photo Page</Label>
                           <div className="border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-muted/50">
                             <Upload className="h-8 w-8 text-muted-foreground" />
-                            <p className="text-sm font-medium">Upload Passport Page</p>
-                            <p className="text-xs text-muted-foreground">JPG, PNG or PDF, max 5MB</p>
+                            <p className="text-sm font-medium">
+                              Upload Passport Page
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              JPG, PNG or PDF, max 5MB
+                            </p>
                           </div>
                         </div>
                       </TabsContent>
-                      <TabsContent value="drivers-license" className="space-y-4 pt-4">
+                      <TabsContent
+                        value="drivers-license"
+                        className="space-y-4 pt-4"
+                      >
                         <div className="space-y-2">
-                          <Label htmlFor="license-number">Driver's License Number</Label>
-                          <Input id="license-number" placeholder="Enter your license number" />
+                          <Label htmlFor="license-number">
+                            Driver's License Number
+                          </Label>
+                          <Input
+                            id="license-number"
+                            placeholder="Enter your license number"
+                          />
                         </div>
                         <div className="space-y-2">
                           <Label>License Front Side</Label>
                           <div className="border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-muted/50">
                             <Upload className="h-8 w-8 text-muted-foreground" />
-                            <p className="text-sm font-medium">Upload Front Side</p>
-                            <p className="text-xs text-muted-foreground">JPG, PNG or PDF, max 5MB</p>
+                            <p className="text-sm font-medium">
+                              Upload Front Side
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              JPG, PNG or PDF, max 5MB
+                            </p>
                           </div>
                         </div>
                         <div className="space-y-2">
                           <Label>License Back Side</Label>
                           <div className="border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-muted/50">
                             <Upload className="h-8 w-8 text-muted-foreground" />
-                            <p className="text-sm font-medium">Upload Back Side</p>
-                            <p className="text-xs text-muted-foreground">JPG, PNG or PDF, max 5MB</p>
+                            <p className="text-sm font-medium">
+                              Upload Back Side
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              JPG, PNG or PDF, max 5MB
+                            </p>
                           </div>
                         </div>
                       </TabsContent>
@@ -144,16 +212,26 @@ export default function KYCPage() {
                       <div className="border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-muted/50">
                         <User className="h-8 w-8 text-muted-foreground" />
                         <p className="text-sm font-medium">Upload Selfie</p>
-                        <p className="text-xs text-muted-foreground">Take a clear photo of your face</p>
+                        <p className="text-xs text-muted-foreground">
+                          Take a clear photo of your face
+                        </p>
                       </div>
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="phone">Phone Number</Label>
-                      <Input id="phone" type="tel" placeholder="+237 123 456 789" />
+                      <Input
+                        id="phone"
+                        type="tel"
+                        placeholder="+237 123 456 789"
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="email">Email Address</Label>
-                      <Input id="email" type="email" placeholder="john.doe@example.com" />
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="john.doe@example.com"
+                      />
                     </div>
                     <div className="p-4 border rounded-lg bg-muted/50">
                       <div className="flex items-center gap-2 mb-2">
@@ -161,10 +239,15 @@ export default function KYCPage() {
                         <p className="font-medium">Terms and Conditions</p>
                       </div>
                       <p className="text-sm text-muted-foreground mb-4">
-                        By submitting your information, you agree to our terms and conditions and privacy policy.
+                        By submitting your information, you agree to our terms
+                        and conditions and privacy policy.
                       </p>
                       <div className="flex items-center gap-2">
-                        <input type="checkbox" id="agree" className="rounded border-gray-300" />
+                        <input
+                          type="checkbox"
+                          id="agree"
+                          className="rounded border-gray-300"
+                        />
                         <label htmlFor="agree" className="text-sm">
                           I agree to the terms and conditions
                         </label>
@@ -196,13 +279,15 @@ export default function KYCPage() {
                 </div>
                 <h3 className="text-xl font-bold">Verification in Progress</h3>
                 <p className="text-muted-foreground">
-                  We're currently reviewing your information. This process typically takes 24-48 hours.
+                  We're currently reviewing your information. This process
+                  typically takes 24-48 hours.
                 </p>
                 <div className="w-full bg-muted rounded-full h-2.5 mt-4">
                   <div className="bg-warning h-2.5 rounded-full w-1/2 shimmer"></div>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  You'll receive a notification once the verification is complete.
+                  You'll receive a notification once the verification is
+                  complete.
                 </p>
               </div>
             )}
@@ -214,7 +299,8 @@ export default function KYCPage() {
                 </div>
                 <h3 className="text-xl font-bold">Verification Complete</h3>
                 <p className="text-muted-foreground">
-                  Your identity has been successfully verified. You now have full access to all features.
+                  Your identity has been successfully verified. You now have
+                  full access to all features.
                 </p>
                 <div className="w-full bg-muted rounded-full h-2.5 mt-4">
                   <div className="bg-success h-2.5 rounded-full w-full"></div>
@@ -258,7 +344,11 @@ export default function KYCPage() {
               </>
             )}
             {verificationStatus === "pending" && (
-              <Button variant="outline" className="w-full" onClick={() => setVerificationStatus("verified")}>
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => setVerificationStatus("verified")}
+              >
                 Check Status
               </Button>
             )}
@@ -271,5 +361,5 @@ export default function KYCPage() {
         </Card>
       </div>
     </DashboardShell>
-  )
+  );
 }

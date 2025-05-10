@@ -27,6 +27,8 @@ import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
+export const dynamic = "force-dynamic";
+
 const notifications = [
   {
     type: "received",
@@ -73,9 +75,9 @@ const notifications = [
 export default function NotificationsPage() {
   const [filter, setFilter] = useState("all");
   const [unreadOnly, setUnreadOnly] = useState(false);
-   const searchParams = useSearchParams();
+  const searchParams = useSearchParams();
   const amount = searchParams.get("amount") || "0.00";
-  
+
   const notifications = [
     {
       type: "topup",
