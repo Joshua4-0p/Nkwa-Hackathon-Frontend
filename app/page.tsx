@@ -298,7 +298,7 @@ export default function Home() {
                 className="relative aspect-video bg-gradient-to-tr from-primary/10 to-background rounded-2xl p-8 shadow-xl"
               >
                 <Image
-                  src="/U_ZBS3gVVgh9hlDGefEpD.svg"
+                  src="/africa-map-illustration.svg"
                   alt="Africa Map with Transaction Flow"
                   width={800}
                   height={600}
