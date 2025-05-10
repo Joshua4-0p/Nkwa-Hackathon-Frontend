@@ -7,7 +7,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Bell, CreditCard, Home, LogOut, Menu, Send, Settings, User, Wallet } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -18,6 +18,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useSearchParams, useRouter } from "next/navigation";
 
 interface DashboardShellProps {
   children: React.ReactNode
@@ -26,6 +27,19 @@ interface DashboardShellProps {
 export function DashboardShell({ children }: DashboardShellProps) {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
+  const router = useRouter();
+
+  // Add inside DashboardShell component
+  const searchParams = useSearchParams();
+  const [balance, setBalance] = useState(1250);
+
+  useEffect(() => {
+    if (searchParams.get("topup") === "success") {
+      const amount = Number(searchParams.get("amount"));
+      setBalance((prev) => prev + (amount || 0));
+      router.replace("/dashboard");
+    }
+  }, [searchParams, router]);
 
   const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: Home },

@@ -5,13 +5,61 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { DashboardShell } from "@/components/dashboard-shell"
 import { ArrowDown, ArrowUp, DollarSign, Plus, RefreshCw, Send } from "lucide-react"
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
+import { useSearchParams } from "next/navigation";
 
 export default function DashboardPage() {
-  const [balance] = useState("1,250.00")
-  const [currency] = useState("XAF")
+  const [balance] = useState("1,250.00");
+  const [currency] = useState("XAF");
+  const initialTransactions = [
+    {
+      type: "received" as const,
+      name: "John Doe",
+      amount: "250.00",
+      currency: "XAF",
+      date: "Today, 10:30 AM",
+      status: "completed" as const,
+    },
+    {
+      type: "sent" as const,
+      name: "Jane Smith",
+      amount: "500.00",
+      currency: "XAF",
+      date: "Yesterday, 3:45 PM",
+      status: "completed" as const,
+    },
+    // Add other initial transactions here...
+  ];
+
+  // Add this to your dashboard page
+  const searchParams = useSearchParams();
+  const [transactions, setTransactions] = useState<TransactionItemProps[]>(initialTransactions);
+
+  useEffect(() => {
+    if (searchParams.get("topup") === "success") {
+      const amount = searchParams.get("amount");
+
+      setTransactions((prev) => [
+        {
+          type: "topup",
+          name: "Mobile Money Top-Up",
+          amount: amount || "0.00",
+          currency: "XAF",
+          date: new Date().toLocaleDateString(),
+          status: "completed",
+        },
+        ...prev,
+      ]);
+
+      // Clear the search params after processing
+      const url = new URL(window.location.href);
+      url.searchParams.delete("topup");
+      url.searchParams.delete("amount");
+      window.history.replaceState({}, document.title, url.toString());
+    }
+  }, [searchParams]);
 
   return (
     <DashboardShell>
@@ -19,7 +67,9 @@ export default function DashboardPage() {
         {/* Wallet Card */}
         <Card className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground">
           <CardHeader>
-            <CardTitle className="text-lg font-medium">Your Wallet Balance</CardTitle>
+            <CardTitle className="text-lg font-medium">
+              Your Wallet Balance
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col gap-1">
@@ -103,38 +153,9 @@ export default function DashboardPage() {
                 <TabsTrigger value="received">Received</TabsTrigger>
               </TabsList>
               <TabsContent value="all" className="pt-4 space-y-4">
-                <TransactionItem
-                  type="received"
-                  name="John Doe"
-                  amount="250.00"
-                  currency="XAF"
-                  date="Today, 10:30 AM"
-                  status="completed"
-                />
-                <TransactionItem
-                  type="sent"
-                  name="Jane Smith"
-                  amount="500.00"
-                  currency="XAF"
-                  date="Yesterday, 3:45 PM"
-                  status="completed"
-                />
-                <TransactionItem
-                  type="topup"
-                  name="NkwaPay"
-                  amount="1,000.00"
-                  currency="XAF"
-                  date="May 7, 2025"
-                  status="completed"
-                />
-                <TransactionItem
-                  type="sent"
-                  name="Michael Johnson"
-                  amount="300.00"
-                  currency="XAF"
-                  date="May 5, 2025"
-                  status="pending"
-                />
+                {transactions.map((transaction, index) => (
+                  <TransactionItem key={index} {...transaction} />
+                ))}
               </TabsContent>
               <TabsContent value="sent" className="pt-4 space-y-4">
                 <TransactionItem
@@ -185,7 +206,9 @@ export default function DashboardPage() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle>Exchange Rates</CardTitle>
-            <CardDescription>Current rates for popular currencies</CardDescription>
+            <CardDescription>
+              Current rates for popular currencies
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
@@ -248,7 +271,7 @@ export default function DashboardPage() {
         </Card>
       </div>
     </DashboardShell>
-  )
+  );
 }
 
 interface TransactionItemProps {
